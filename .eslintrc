@@ -8,6 +8,7 @@
       }
     ],
     "import/no-extraneous-dependencies": "off",
-    "comma-dangle": ["error", {"objects": "always-multiline"}]
+    "no-unused-vars": "warn",
+    "comma-dangle": 1
   }
 }
