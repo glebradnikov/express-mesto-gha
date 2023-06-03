@@ -22,5 +22,12 @@ app.use((req, res, next) => {
 
 app.use('/users', usersRoutes);
 app.use('/cards', cardsRoutes);
+app.use((req, res, next) => {
+  next(
+    res
+      .status(404)
+      .send({ message: 'Неправильный путь запрашиваемой страницы' })
+  );
+});
 
 app.listen(PORT);
