@@ -3,7 +3,7 @@ const User = require('../models/user');
 const getUsers = (req, res) => {
   User.find({})
     .then((users) => {
-      res.status(200).send({ users });
+      res.send({ users });
     })
     .catch((error) => {
       res.status(500).send({ message: 'Ошибка по умолчанию.' });
@@ -14,20 +14,19 @@ const getUser = (req, res) => {
   const { userId } = req.params;
 
   User.findById(userId)
+    .orFail(new Error('NotFoundError'))
     .then((user) => {
-      if (!user) {
-        res
-          .status(404)
-          .send({ message: 'Пользователь по указанному _id не найден.' });
-      } else {
-        res.status(200).send({ user });
-      }
+      res.send({ user });
     })
     .catch((error) => {
       if (error.name === 'CastError' || error.name === 'ValidationError') {
         res.status(400).send({
           message: 'Переданы некорректные данные для поиска пользователя.',
         });
+      } else if (error.message === 'NotFoundError') {
+        res
+          .status(404)
+          .send({ message: 'Пользователь по указанному _id не найден.' });
       } else {
         res.status(500).send({ message: 'Ошибка по умолчанию.' });
       }
@@ -39,7 +38,7 @@ const createUser = (req, res) => {
 
   User.create({ name, about, avatar })
     .then((user) => {
-      res.status(200).send({ user });
+      res.status(201).send({ user });
     })
     .catch((error) => {
       if (error.name === 'CastError' || error.name === 'ValidationError') {
@@ -63,20 +62,19 @@ const updateUserProfile = (req, res) => {
       runValidators: true,
     }
   )
+    .orFail(new Error('NotFoundError'))
     .then((user) => {
-      if (!user) {
-        res
-          .status(404)
-          .send({ message: 'Пользователь с указанным _id не найден.' });
-      } else {
-        res.status(200).send({ user });
-      }
+      res.send({ user });
     })
     .catch((error) => {
       if (error.name === 'CastError' || error.name === 'ValidationError') {
         res.status(400).send({
           message: 'Переданы некорректные данные при обновлении профиля.',
         });
+      } else if (error.message === 'NotFoundError') {
+        res
+          .status(404)
+          .send({ message: 'Пользователь с указанным _id не найден.' });
       } else {
         res.status(500).send({ message: 'Ошибка по умолчанию.' });
       }
@@ -94,20 +92,19 @@ const updateUserAvatar = (req, res) => {
       runValidators: true,
     }
   )
+    .orFail(new Error('NotFoundError'))
     .then((user) => {
-      if (!user) {
-        res
-          .status(404)
-          .send({ message: 'Пользователь с указанным _id не найден.' });
-      } else {
-        res.status(200).send({ user });
-      }
+      res.send({ user });
     })
     .catch((error) => {
       if (error.name === 'CastError' || error.name === 'ValidationError') {
         res.status(400).send({
           message: 'Переданы некорректные данные при обновлении аватара.',
         });
+      } else if (error.message === 'NotFoundError') {
+        res
+          .status(404)
+          .send({ message: 'Пользователь с указанным _id не найден.' });
       } else {
         res.status(500).send({ message: 'Ошибка по умолчанию.' });
       }
