@@ -19,7 +19,7 @@ const getUser = (req, res) => {
       res.send({ user });
     })
     .catch((error) => {
-      if (error.name === 'CastError' || error.name === 'ValidationError') {
+      if (error.name === 'CastError') {
         res.status(400).send({
           message: 'Переданы некорректные данные для поиска пользователя.',
         });
@@ -41,7 +41,7 @@ const createUser = (req, res) => {
       res.status(201).send({ user });
     })
     .catch((error) => {
-      if (error.name === 'CastError' || error.name === 'ValidationError') {
+      if (error.name === 'ValidationError') {
         res.status(400).send({
           message: 'Переданы некорректные данные при создании пользователя.',
         });
@@ -67,7 +67,7 @@ const updateUserProfile = (req, res) => {
       res.send({ user });
     })
     .catch((error) => {
-      if (error.name === 'CastError' || error.name === 'ValidationError') {
+      if (error.name === 'ValidationError') {
         res.status(400).send({
           message: 'Переданы некорректные данные при обновлении профиля.',
         });
@@ -97,7 +97,7 @@ const updateUserAvatar = (req, res) => {
       res.send({ user });
     })
     .catch((error) => {
-      if (error.name === 'CastError' || error.name === 'ValidationError') {
+      if (error.name === 'ValidationError') {
         res.status(400).send({
           message: 'Переданы некорректные данные при обновлении аватара.',
         });
