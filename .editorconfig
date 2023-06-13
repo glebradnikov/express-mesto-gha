@@ -2,7 +2,7 @@
 
 # A special property that should be specified at the top of the file outside of
 # any sections. Set to true to stop .editor config file search on current file
-root = true
+# root = true
 
 [*]
 # Indentation style
@@ -24,8 +24,6 @@ charset = utf-8
 # Denotes whether to trim whitespace at the end of lines
 # Possible values - true, false
 trim_trailing_whitespace = true
-
-quote_type = single
 
 [*.md]
 trim_trailing_whitespace = false

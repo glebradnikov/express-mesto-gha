@@ -1,14 +1,9 @@
 {
   "extends": "airbnb-base",
   "rules": {
-    "no-underscore-dangle": [
-      "error",
-      {
-        "allow": ["_id"]
-      }
-    ],
-    "import/no-extraneous-dependencies": "off",
-    "no-unused-vars": "warn",
-    "comma-dangle": 1
+    "comma-dangle": 1,
+    "no-underscore-dangle": 1,
+    "no-unused-vars": 1,
+    "object-curly-newline": 1
   }
 }

@@ -2,6 +2,10 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const helmet = require('helmet');
+const cookieParser = require('cookie-parser');
+const auth = require('./middlewares/auth');
+const errorHandling = require('./middlewares/error-handling');
+const { createUser, login } = require('./controllers/users');
 const usersRoutes = require('./routes/users');
 const cardsRoutes = require('./routes/cards');
 
@@ -14,19 +18,15 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(helmet());
+app.use(cookieParser());
 
-app.use((req, res, next) => {
-  req.user = {
-    _id: '6478a22fb4d99cd048705017',
-  };
+app.post('/signin', login);
+app.post('/signup', createUser);
 
-  next();
-});
+app.use(auth);
 
 app.use('/users', usersRoutes);
 app.use('/cards', cardsRoutes);
-app.use((req, res, next) => {
-  next(res.status(404).send({ message: 'Некорректный URL' }));
-});
+app.use(errorHandling);
 
 app.listen(PORT);
