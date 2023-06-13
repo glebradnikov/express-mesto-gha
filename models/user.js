@@ -5,6 +5,20 @@ const UnauthorizedError = require('../errors/unauthorized-error');
 
 const userSchema = new mongoose.Schema(
   {
+    email: {
+      type: String,
+      unique: [true, 'Поле "email" должно быть уникальным'],
+      required: [true, 'Поле "email" должно быть заполнено'],
+      validate: {
+        validator: (email) => validator.isEmail(email),
+        message: 'Некорректный email',
+      },
+    },
+    password: {
+      type: String,
+      required: [true, 'Поле "password" должно быть заполнено'],
+      select: false,
+    },
     name: {
       type: String,
       minlength: [2, 'Минимальная длина поля "name" - 2'],
@@ -25,20 +39,6 @@ const userSchema = new mongoose.Schema(
         validator: (avatar) => validator.isURL(avatar),
         message: 'Некорректный URL',
       },
-    },
-    email: {
-      type: String,
-      unique: [true, 'Поле "email" должно быть уникальным'],
-      required: [true, 'Поле "email" должно быть заполнено'],
-      validate: {
-        validator: (email) => validator.isEmail(email),
-        message: 'Некорректный email',
-      },
-    },
-    password: {
-      type: String,
-      required: [true, 'Поле "password" должно быть заполнено'],
-      select: false,
     },
   },
   {

@@ -13,6 +13,17 @@ module.exports.getUsers = (request, response, next) => {
     .catch(next);
 };
 
+module.exports.getCurrentUser = (request, response, next) => {
+  const { _id } = request.user;
+
+  User.findOne({ _id })
+    .orFail(new NotFoundError('Пользователь по указанному _id не найден'))
+    .then((user) => {
+      response.send({ user });
+    })
+    .catch(next);
+};
+
 module.exports.getUser = (request, response, next) => {
   const { userId } = request.params;
 
@@ -32,17 +43,6 @@ module.exports.getUser = (request, response, next) => {
 
       next(error);
     });
-};
-
-module.exports.getCurrentUser = (request, response, next) => {
-  const { _id } = request.user;
-
-  User.findOne({ _id })
-    .orFail(new NotFoundError('Пользователь по указанному _id не найден'))
-    .then((user) => {
-      response.send({ user });
-    })
-    .catch(next);
 };
 
 module.exports.createUser = (request, response, next) => {
