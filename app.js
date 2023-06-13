@@ -6,14 +6,14 @@ const cookieParser = require('cookie-parser');
 const { celebrate, Joi, errors } = require('celebrate');
 const auth = require('./middlewares/auth');
 const errorHandling = require('./middlewares/error-handling');
+const { URL_REGEX } = require('./utils/constants');
 const { createUser, login } = require('./controllers/users');
 const usersRoutes = require('./routes/users');
 const cardsRoutes = require('./routes/cards');
+const NotFoundError = require('./errors/not-found-error');
 
 const { PORT = 3000 } = process.env;
 const app = express();
-const URL_REGEX =
-  /https?:\/\/(www\.)?[a-zA-Z0-9-.]+[\w\-.~:/?#[\]@!$'()*+,;=]+/;
 
 mongoose.connect('mongodb://127.0.0.1:27017/mestodb');
 
@@ -49,6 +49,9 @@ app.post(
 app.use(auth);
 app.use('/users', usersRoutes);
 app.use('/cards', cardsRoutes);
+app.use((request, response, next) => {
+  next(new NotFoundError('Неправильный путь запрашиваемой страницы'));
+});
 app.use(errors());
 app.use(errorHandling);
 

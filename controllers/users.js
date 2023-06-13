@@ -5,6 +5,61 @@ const BadRequestError = require('../errors/bad-request-error');
 const NotFoundError = require('../errors/not-found-error');
 const ConflictError = require('../errors/conflict-error');
 
+module.exports.login = (request, response, next) => {
+  const { email, password } = request.body;
+
+  User.findUserByCredentials(email, password)
+    .then((user) => {
+      const token = jwt.sign({ _id: user._id }, 'some-secret-key', {
+        expiresIn: '7d',
+      });
+
+      response.cookie('jwt', token, {
+        maxAge: 3600000,
+        httpOnly: true,
+      });
+
+      response.send({ token });
+    })
+    .catch(next);
+};
+
+module.exports.createUser = (request, response, next) => {
+  const { name, about, avatar, email, password } = request.body;
+
+  bcrypt.hash(password, 10).then((hash) => {
+    User.create({
+      name,
+      about,
+      avatar,
+      email,
+      password: hash,
+    })
+      .then((user) => {
+        response.status(201).send(user);
+      })
+      .catch((error) => {
+        if (error.name === 'ValidationError') {
+          next(
+            new BadRequestError(
+              'Переданы некорректные данные при создании пользователя'
+            )
+          );
+        }
+
+        if (error.name === 'MongoServerError') {
+          next(
+            new ConflictError(
+              'При регистрации указан email, который уже существует на сервере'
+            )
+          );
+        }
+
+        next(error);
+      });
+  });
+};
+
 module.exports.getUsers = (request, response, next) => {
   User.find({})
     .then((users) => {
@@ -43,42 +98,6 @@ module.exports.getUser = (request, response, next) => {
 
       next(error);
     });
-};
-
-module.exports.createUser = (request, response, next) => {
-  const { name, about, avatar, email, password } = request.body;
-
-  bcrypt.hash(password, 10).then((hash) => {
-    User.create({
-      name,
-      about,
-      avatar,
-      email,
-      password: hash,
-    })
-      .then((user) => {
-        response.status(201).send({ user });
-      })
-      .catch((error) => {
-        if (error.name === 'ValidationError') {
-          next(
-            new BadRequestError(
-              'Переданы некорректные данные при создании пользователя'
-            )
-          );
-        }
-
-        if (error.name === 'MongoServerError') {
-          next(
-            new ConflictError(
-              'При регистрации указан email, который уже существует на сервере'
-            )
-          );
-        }
-
-        next(error);
-      });
-  });
 };
 
 module.exports.updateUserProfile = (request, response, next) => {
@@ -137,23 +156,4 @@ module.exports.updateUserAvatar = (request, response, next) => {
 
       next(error);
     });
-};
-
-module.exports.login = (request, response, next) => {
-  const { email, password } = request.body;
-
-  User.findUserByCredentials(email, password)
-    .then((user) => {
-      const token = jwt.sign({ _id: user._id }, 'some-secret-key', {
-        expiresIn: '7d',
-      });
-
-      response.cookie('jwt', token, {
-        maxAge: 3600000,
-        httpOnly: true,
-      });
-
-      response.send({ token });
-    })
-    .catch(next);
 };

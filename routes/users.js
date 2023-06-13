@@ -2,14 +2,12 @@ const router = require('express').Router();
 const { celebrate, Joi } = require('celebrate');
 const {
   getUsers,
-  getUser,
   getCurrentUser,
+  getUser,
   updateUserProfile,
   updateUserAvatar,
 } = require('../controllers/users');
-
-const URL_REGEX =
-  /https?:\/\/(www\.)?[a-zA-Z0-9-.]+[\w\-.~:/?#[\]@!$'()*+,;=]+/;
+const { URL_REGEX } = require('../utils/constants');
 
 router.get('/', getUsers);
 router.get('/me', getCurrentUser);
