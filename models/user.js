@@ -22,7 +22,7 @@ const userSchema = new mongoose.Schema(
       default:
         'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
       validate: {
-        validator: (avatar) => validator.isEmail(avatar),
+        validator: (avatar) => validator.isURL(avatar),
         message: 'Некорректный URL',
       },
     },
@@ -39,10 +39,6 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: [true, 'Поле "password" должно быть заполнено'],
       select: false,
-      validate: {
-        validator: (password) => validator.isStrongPassword(password),
-        message: 'Некорректный password',
-      },
     },
   },
   {
@@ -56,14 +52,14 @@ userSchema.statics.findUserByCredentials = function (email, password) {
     .then((user) => {
       if (!user) {
         return Promise.reject(
-          new UnauthorizedError('Неправильные почта или пароль')
+          new UnauthorizedError('Передан неверный логин или пароль')
         );
       }
 
       return bcrypt.compare(password, user.password).then((matched) => {
         if (!matched) {
           return Promise.reject(
-            new UnauthorizedError('Неправильные почта или пароль')
+            new UnauthorizedError('Передан неверный логин или пароль')
           );
         }
 

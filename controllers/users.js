@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const BadRequestError = require('../errors/bad-request-error');
 const NotFoundError = require('../errors/not-found-error');
+const ConflictError = require('../errors/conflict-error');
 
 module.exports.getUsers = (request, response, next) => {
   User.find({})
@@ -63,6 +64,14 @@ module.exports.createUser = (request, response, next) => {
           next(
             new BadRequestError(
               'Переданы некорректные данные при создании пользователя'
+            )
+          );
+        }
+
+        if (error.name === 'MongoServerError') {
+          next(
+            new ConflictError(
+              'При регистрации указан email, который уже существует на сервере'
             )
           );
         }

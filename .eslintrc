@@ -4,6 +4,7 @@
     "comma-dangle": 1,
     "no-underscore-dangle": ["error", { "allow": ["_id"] }],
     "no-unused-vars": 1,
-    "object-curly-newline": 1
+    "object-curly-newline": 1,
+    "operator-linebreak": 1
   }
 }
