@@ -4,4 +4,6 @@ module.exports = (error, request, response, next) => {
   response
     .status(statusCode)
     .send({ message: statusCode === 500 ? 'Ошибка по умолчанию' : message });
+
+  next();
 };

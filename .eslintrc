@@ -2,8 +2,9 @@
   "extends": "airbnb-base",
   "rules": {
     "comma-dangle": 1,
-    "no-underscore-dangle": ["error", { "allow": ["_id"] }],
+    "no-underscore-dangle": ["error", { "allow": ["_id"] }]
     "no-unused-vars": 1,
+    "no-useless-escape": 1,
     "object-curly-newline": 1,
     "operator-linebreak": 1
   }

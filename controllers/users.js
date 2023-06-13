@@ -45,6 +45,7 @@ module.exports.createUser = (request, response, next) => {
               'Переданы некорректные данные при создании пользователя'
             )
           );
+          return;
         }
 
         if (error.name === 'MongoServerError') {
@@ -53,6 +54,7 @@ module.exports.createUser = (request, response, next) => {
               'При регистрации указан email, который уже существует на сервере'
             )
           );
+          return;
         }
 
         next(error);
@@ -94,13 +96,14 @@ module.exports.getUser = (request, response, next) => {
             'Переданы некорректные данные для поиска пользователя'
           )
         );
+        return;
       }
 
       next(error);
     });
 };
 
-module.exports.updateUserProfile = (request, response, next) => {
+module.exports.updateUserInfo = (request, response, next) => {
   const { name, about } = request.body;
   const { _id } = request.user;
 
@@ -123,6 +126,7 @@ module.exports.updateUserProfile = (request, response, next) => {
             'Переданы некорректные данные при обновлении профиля'
           )
         );
+        return;
       }
 
       next(error);
@@ -152,6 +156,7 @@ module.exports.updateUserAvatar = (request, response, next) => {
             'Переданы некорректные данные при обновлении аватара'
           )
         );
+        return;
       }
 
       next(error);

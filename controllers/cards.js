@@ -26,6 +26,7 @@ module.exports.createCard = (request, response, next) => {
             'Переданы некорректные данные при создании карточки'
           )
         );
+        return;
       }
 
       next(error);
@@ -41,6 +42,7 @@ module.exports.deleteCard = (request, response, next) => {
     .then((card) => {
       if (card.owner.valueOf() !== _id) {
         next(new ForbiddenError('Попытка удалить чужую карточку'));
+        return;
       }
 
       Card.findByIdAndRemove(card._id.valueOf())
@@ -56,6 +58,7 @@ module.exports.deleteCard = (request, response, next) => {
             'Переданы некорректные данные для удаления карточки'
           )
         );
+        return;
       }
 
       next(error);
@@ -78,6 +81,7 @@ module.exports.likeCard = (request, response, next) => {
             'Переданы некорректные данные для постановки/снятии лайка'
           )
         );
+        return;
       }
 
       next(error);
@@ -100,6 +104,7 @@ module.exports.dislikeCard = (request, response, next) => {
             'Переданы некорректные данные для постановки/снятии лайка'
           )
         );
+        return;
       }
 
       next(error);
