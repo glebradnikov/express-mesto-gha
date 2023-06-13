@@ -36,7 +36,7 @@ module.exports.createUser = (request, response, next) => {
       password: hash,
     })
       .then((user) => {
-        response.status(201).send(user);
+        response.status(201).send({ user });
       })
       .catch((error) => {
         if (error.name === 'ValidationError') {
